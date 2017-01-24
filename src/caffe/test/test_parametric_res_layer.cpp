@@ -63,7 +63,6 @@ TYPED_TEST(ParametricResLayerTest, TestSetUp) {
 TYPED_TEST(ParametricResLayerTest, TestMax) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  LayerParameter layer_param;
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   // for max test, set the internal param to very high value
@@ -82,7 +81,6 @@ TYPED_TEST(ParametricResLayerTest, TestMax) {
 TYPED_TEST(ParametricResLayerTest, TestMin) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  LayerParameter layer_param;
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   // for min test, set the internal param to very low value
@@ -100,7 +98,6 @@ TYPED_TEST(ParametricResLayerTest, TestMin) {
 
 TYPED_TEST(ParametricResLayerTest, TestMean) {
   typedef typename TypeParam::Dtype Dtype;
-  LayerParameter layer_param;
   LayerParameter layer_param;
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
@@ -130,10 +127,8 @@ TYPED_TEST(ParametricResLayerTest, TestMaxGradient) {
 TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  LayerParameter layer_param;
   ParametricResLayer<Dtype> layer(layer_param);
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = -1000; // awcward way of setting the parameter
-  layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   GradientChecker<Dtype> checker(1e-2, 1e-3);
   checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
