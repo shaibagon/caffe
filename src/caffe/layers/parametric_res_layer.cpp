@@ -14,7 +14,7 @@ void ParametricResLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   } else {
     this->blobs_.resize(1);
     this->blobs_[0].reset(new Blob<Dtype>(vector<int>(0)));
-    this->blobs_[0]->mutable_cpu_data()[0] = 0; // init to zero -- need to think how to pass parameter here...
+    this->blobs_[0]->mutable_cpu_data()[0] = bottom[0]->cpu_data()[0]; // init to zero -- need to think how to pass parameter here...
   }
 }
 
