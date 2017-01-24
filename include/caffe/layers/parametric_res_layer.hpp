@@ -85,6 +85,7 @@ class ParametricResLayer : public Layer<Dtype> {
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
   Blob<Dtype> m_;      // max of x1_i, x2_i (for numerically stable computation)
+  Blob<Dtype> buff_;   // extra buffer
   Blob<Dtype> denom_;  // caching the denominator
   Blob<Dtype> tx1_;    // temporary buffer for
   Blob<Dtype> tx2_;    // memory for in-place computation
