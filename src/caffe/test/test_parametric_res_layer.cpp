@@ -107,7 +107,6 @@ TYPED_TEST(ParametricResLayerTest, TestMean) {
   // for mean test, set the internal param to zero
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = 0; // awcward way of setting the parameter
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
-  layer->blobs_[0]->mutable_cpu_data()[0] = 0.f;
   layer->Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   const Dtype* data = this->blob_top_->cpu_data();
   const int count = this->blob_top_->count();
@@ -156,3 +155,5 @@ TYPED_TEST(ParametricResLayerTest, TestMeanGradient) {
   checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
+
+}  // namespace caffe
