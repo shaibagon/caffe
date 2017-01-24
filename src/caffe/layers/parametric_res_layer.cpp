@@ -35,7 +35,7 @@ template <typename Dtype>
 void ParametricResLayer<Dtype>::Forward_cpu(
     const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   const int count = bottom[0]->count();
-  const Dtype theta = this->blobs_[0].cpu_data()[0]; // get the parameter
+  const Dtype theta = this->blobs_[0]->cpu_data()[0]; // get the parameter
   const Dtype* x1 = bottom[0]->cpu_data();
   const Dtype* x2 = bottom[1]->cpu_data();
   Dtype* tx1 = tx1_.mutable_cpu_data();
@@ -72,7 +72,6 @@ void ParametricResLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
   // after forward pass,
   const int count = bottom[0]->count();
-  const Dtype theta = this->blobs_[0].cpu_data()[0]; // get the parameter
   const Dtype* x1 = bottom[0]->cpu_data();
   const Dtype* x2 = bottom[1]->cpu_data();
   const Dtype* top_diff = top[0]->cpu_diff();
@@ -87,7 +86,7 @@ void ParametricResLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   if (propagate_down[0]) {
     // gradient w.r.t x1
     Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
-    caffe_add_scalar(count, m, Dtype(1), m);
+    caffe_add_scalar(count, Dtype(1), m);
     caffe_mul(count, m, buff, bottom_diff);
     caffe_sqr(count, tx1, tx1);
     caffe_add(count, bottom_diff, tx1, bottom_diff);
@@ -99,7 +98,7 @@ void ParametricResLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
     // gradient w.r.t x1
     Dtype* bottom_diff = bottom[1]->mutable_cpu_diff();
     caffe_scal(count, m, Dtype(-1), m);
-    caffe_add_scalar(count, m, Dtype(2), m); // from tx1-tx2+1 --> tx2-tx1+1
+    caffe_add_scalar(count, Dtype(2), m); // from tx1-tx2+1 --> tx2-tx1+1
     caffe_mul(count, m, buff, bottom_diff);
     caffe_sqr(count, tx2, tx2);
     caffe_add(count, bottom_diff, tx2, bottom_diff);
