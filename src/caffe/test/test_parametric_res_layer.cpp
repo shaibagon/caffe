@@ -28,11 +28,10 @@ class ParametricResLayerTest : public MultiDeviceTest<TypeParam> {
     filler_param.set_min(-10);
     filler_param.set_max(10);
     UniformFiller<Dtype> filler(filler_param);
-    filler.Fill(this->blob_bottom_a_);
-    filler.Fill(this->blob_bottom_b_);
-    filler.Fill(this->blob_bottom_c_);
-    blob_bottom_vec_.push_back(blob_bottom_a_);
-    blob_bottom_vec_.push_back(blob_bottom_b_);
+    filler.Fill(this->blob_bottom_x1_);
+    filler.Fill(this->blob_bottom_x2_);
+    blob_bottom_vec_.push_back(blob_bottom_x1_);
+    blob_bottom_vec_.push_back(blob_bottom_x2_);
     blob_top_vec_.push_back(blob_top_);
   }
   virtual ~ParametricResLayerTest() {
