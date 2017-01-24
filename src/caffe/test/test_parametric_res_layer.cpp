@@ -76,7 +76,7 @@ TYPED_TEST(ParametricResLayerTest, TestMax) {
   const Dtype* x1 = this->blob_bottom_x1_->cpu_data();
   const Dtype* x2 = this->blob_bottom_x2_->cpu_data();
   for (int i = 0; i < count; ++i) {
-    EXPECT_NEAR(data[i], max(x1[i], x2[i]), 1e-4);
+    EXPECT_NEAR(data[i], std::max(x1[i], x2[i]), 1e-4);
   }
 }
 
@@ -95,7 +95,7 @@ TYPED_TEST(ParametricResLayerTest, TestMin) {
   const Dtype* x1 = this->blob_bottom_x1_->cpu_data();
   const Dtype* x2 = this->blob_bottom_x2_->cpu_data();
   for (int i = 0; i < count; ++i) {
-    EXPECT_NEAR(data[i], min(x1[i], x2[i]), 1e-4);
+    EXPECT_NEAR(data[i], std::min(x1[i], x2[i]), 1e-4);
   }
 }
 

@@ -48,8 +48,8 @@ class ParametricResLayer : public Layer<Dtype> {
    */
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
-  virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
-      const vector<Blob<Dtype>*>& top);
+//  virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+//      const vector<Blob<Dtype>*>& top);
 
   /**
    * @brief Computes the error gradient w.r.t. the PReLU inputs.
@@ -81,8 +81,8 @@ class ParametricResLayer : public Layer<Dtype> {
    */
   virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
-  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
-      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+//  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+//      const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
   Blob<Dtype> m_;      // max of x1_i, x2_i (for numerically stable computation)
   Blob<Dtype> buff_;   // extra buffer
