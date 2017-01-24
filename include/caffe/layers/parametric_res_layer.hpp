@@ -13,21 +13,12 @@ namespace caffe {
 /**
  * @brief Parameterized residual branch merging @f$
  *        y_i = (x1_i exp(\theta x1_i) + x2_i exp(\theta x2_i))/ \max(0, x_i) + a_i \min(0, x_i)
- *        @f$. The differences from ReLULayer are 1) negative slopes are
- *        learnable though backprop and 2) negative slopes can vary across
- *        channels. The number of axes of input blob should be greater than or
- *        equal to 2. The 1st axis (0-based) is seen as channels.
+ *        @f$.
  */
 template <typename Dtype>
 class ParametricResLayer : public Layer<Dtype> {
  public:
   /**
-   * @param param provides PReLUParameter prelu_param,
-   *     with PReLULayer options:
-   *   - filler (\b optional, FillerParameter,
-   *     default {'type': constant 'value':0.25}).
-   *   - channel_shared (\b optional, default false).
-   *     negative slopes are shared across channels.
    */
   explicit ParametricResLayer(const LayerParameter& param)
       : Layer<Dtype>(param) {}
@@ -44,13 +35,15 @@ class ParametricResLayer : public Layer<Dtype> {
 
  protected:
   /**
-   * @param bottom input Blob vector (length 1)
+   * @param bottom input Blob vector (length 2)
    *   -# @f$ (N \times C \times ...) @f$
-   *      the inputs @f$ x @f$
+   *      the input @f$ x1 @f$
+   *   -# @f$ (N \times C \times ...) @f$
+   *      the input @f$ x2 @f$
    * @param top output Blob vector (length 1)
    *   -# @f$ (N \times C \times ...) @f$
-   *      the computed outputs for each channel @f$i@f$ @f$
-   *        y_i = \max(0, x_i) + a_i \min(0, x_i)
+   *      the computed outputs for each element @f$i@f$ @f$
+   *        y_i = (x1_i exp(\theta x1_i) + x2_i exp(\theta x2_i))/ \max(0, x_i) + a_i \min(0, x_i)
    *      @f$.
    */
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
@@ -67,9 +60,9 @@ class ParametricResLayer : public Layer<Dtype> {
    *      containing error gradients @f$ \frac{\partial E}{\partial y} @f$
    *      with respect to computed outputs @f$ y @f$
    * @param propagate_down see Layer::Backward.
-   * @param bottom input Blob vector (length 1)
+   * @param bottom input Blob vector (length 2)
    *   -# @f$ (N \times C \times ...) @f$
-   *      the inputs @f$ x @f$; For each channel @f$i@f$, backward fills their
+   *      the inputs @f$ x1 @f$; For each channel @f$i@f$, backward fills their
    *      diff with gradients @f$
    *        \frac{\partial E}{\partial x_i} = \left\{
    *        \begin{array}{lr}
@@ -91,10 +84,10 @@ class ParametricResLayer : public Layer<Dtype> {
   virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
-  bool channel_shared_;
-  Blob<Dtype> multiplier_;  // dot multiplier for backward computation of params
-  Blob<Dtype> backward_buff_;  // temporary buffer for backward computation
-  Blob<Dtype> bottom_memory_;  // memory for in-place computation
+  Blob<Dtype> m_;      // max of x1_i, x2_i (for numerically stable computation)
+  Blob<Dtype> denom_;  // caching the denominator
+  Blob<Dtype> tx1_;    // temporary buffer for
+  Blob<Dtype> tx2_;    // memory for in-place computation
 };
 
 }  // namespace caffe
