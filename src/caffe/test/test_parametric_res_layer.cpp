@@ -68,7 +68,7 @@ TYPED_TEST(ParametricResLayerTest, TestMax) {
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   // for max test, set the internal param to very high value
-  layer->blobs_[0].mutable_cpu_data()[0] = 1000.f;
+  layer->blobs_[0]->mutable_cpu_data()[0] = 1000.f;
   layer->Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   const Dtype* data = this->blob_top_->cpu_data();
   const int count = this->blob_top_->count();
@@ -87,7 +87,7 @@ TYPED_TEST(ParametricResLayerTest, TestMin) {
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   // for min test, set the internal param to very low value
-  layer->blobs_[0].mutable_cpu_data()[0] = -1000.f;
+  layer->blobs_[0]->mutable_cpu_data()[0] = -1000.f;
   layer->Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   const Dtype* data = this->blob_top_->cpu_data();
   const int count = this->blob_top_->count();
@@ -106,7 +106,7 @@ TYPED_TEST(ParametricResLayerTest, TestMean) {
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   // for mean test, set the internal param to zero
-  layer->blobs_[0].mutable_cpu_data()[0] = 0.f;
+  layer->blobs_[0]->mutable_cpu_data()[0] = 0.f;
   layer->Forward(this->blob_bottom_vec_, this->blob_top_vec_);
   const Dtype* data = this->blob_top_->cpu_data();
   const int count = this->blob_top_->count();
