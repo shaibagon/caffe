@@ -126,7 +126,7 @@ TYPED_TEST(ParametricResLayerTest, TestMaxGradient) {
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = 1000; // awcward way of setting the parameter
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   GradientChecker<Dtype> checker(1e-2, 1e-3);
-  checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
+  checker.CheckGradientEltwise(layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
 
@@ -139,7 +139,7 @@ TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = -1000; // awcward way of setting the parameter
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   GradientChecker<Dtype> checker(1e-2, 1e-3);
-  checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
+  checker.CheckGradientEltwise(layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
 
