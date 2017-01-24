@@ -14,7 +14,7 @@ void ParametricResLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   } else {
     this->blobs_.resize(1);
     this->blobs_[0].reset(new Blob<Dtype>(vector<int>(0)));
-    this->blobs_[0].mutable_cpu_data()[0] = 0; // init to zero -- need to think how to pass parameter here...
+    this->blobs_[0]->mutable_cpu_data()[0] = 0; // init to zero -- need to think how to pass parameter here...
   }
 }
 
@@ -97,7 +97,7 @@ void ParametricResLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   if (propagate_down[1]) {
     // gradient w.r.t x1
     Dtype* bottom_diff = bottom[1]->mutable_cpu_diff();
-    caffe_scal(count, m, Dtype(-1), m);
+    caffe_scal(count, Dtype(-1), m);
     caffe_add_scalar(count, Dtype(2), m); // from tx1-tx2+1 --> tx2-tx1+1
     caffe_mul(count, m, buff, bottom_diff);
     caffe_sqr(count, tx2, tx2);
