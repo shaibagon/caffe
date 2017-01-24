@@ -146,13 +146,12 @@ TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
 TYPED_TEST(ParametricResLayerTest, TestMeanGradient) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  LayerParameter layer_param;
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = 0; // awcward way of setting the parameter
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
   GradientChecker<Dtype> checker(1e-2, 1e-3);
-  checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
+  checker.CheckGradientEltwise(layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
 
