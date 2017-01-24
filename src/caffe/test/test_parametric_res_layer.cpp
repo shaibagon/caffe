@@ -25,8 +25,8 @@ class ParametricResLayerTest : public MultiDeviceTest<TypeParam> {
     // fill the values
     Caffe::set_random_seed(1701);
     FillerParameter filler_param;
-    filler_param.set_min(-10);
-    filler_param.set_max(10);
+    filler_param.set_min(-1);
+    filler_param.set_max(1);
     UniformFiller<Dtype> filler(filler_param);
     filler.Fill(this->blob_bottom_x1_);
     filler.Fill(this->blob_bottom_x2_);
@@ -119,7 +119,7 @@ TYPED_TEST(ParametricResLayerTest, TestMaxGradient) {
   LayerParameter layer_param;
   ParametricResLayer<Dtype> layer(layer_param);
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = 1000; // awcward way of setting the parameter
-  GradientChecker<Dtype> checker(1e-2, 1e-3);
+  GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
@@ -129,7 +129,7 @@ TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
   LayerParameter layer_param;
   ParametricResLayer<Dtype> layer(layer_param);
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = -1000; // awcward way of setting the parameter
-  GradientChecker<Dtype> checker(1e-2, 1e-3);
+  GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
@@ -139,7 +139,7 @@ TYPED_TEST(ParametricResLayerTest, TestMeanGradient) {
   LayerParameter layer_param;
   ParametricResLayer<Dtype> layer(layer_param);
   this->blob_bottom_vec_[0]->mutable_cpu_data()[0] = 0; // awcward way of setting the parameter
-  GradientChecker<Dtype> checker(1e-2, 1e-3);
+  GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
       this->blob_top_vec_);
 }
