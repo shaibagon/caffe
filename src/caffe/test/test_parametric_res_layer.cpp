@@ -82,12 +82,11 @@ TYPED_TEST(ParametricResLayerTest, TestMax) {
 
 TYPED_TEST(ParametricResLayerTest, TestMin) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  // for min test, set the internal param to very low value
-  filler.set_value(-100);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  // for min test, set the internal param to very low value
+  filler->set_value(-100);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -103,12 +102,11 @@ TYPED_TEST(ParametricResLayerTest, TestMin) {
 
 TYPED_TEST(ParametricResLayerTest, TestMean) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  // for mean test, set the internal param to zero
-  filler.set_value(0);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  // for mean test, set the internal param to zero
+  filler->set_value(0);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -124,12 +122,11 @@ TYPED_TEST(ParametricResLayerTest, TestMean) {
 
 TYPED_TEST(ParametricResLayerTest, TestTheta1) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  // test intermediate value of theta
-  filler.set_value(1);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  // test intermediate value of theta
+  filler->set_value(1);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -145,11 +142,10 @@ TYPED_TEST(ParametricResLayerTest, TestTheta1) {
 
 TYPED_TEST(ParametricResLayerTest, TestMaxGradient) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  filler.set_value(10);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  filler->set_value(10);
   ParametricResLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
@@ -158,11 +154,10 @@ TYPED_TEST(ParametricResLayerTest, TestMaxGradient) {
 
 TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  filler.set_value(-10);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  filler->set_value(-10);
   ParametricResLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
@@ -171,11 +166,10 @@ TYPED_TEST(ParametricResLayerTest, TestMinGradient) {
 
 TYPED_TEST(ParametricResLayerTest, TestMeanGradient) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  filler.set_value(0);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  filler->set_value(0);
   ParametricResLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
@@ -184,11 +178,10 @@ TYPED_TEST(ParametricResLayerTest, TestMeanGradient) {
 
 TYPED_TEST(ParametricResLayerTest, TestTheta1Gradient) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  filler.set_value(1);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  filler->set_value(1);
   ParametricResLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 5e-3);
   checker.CheckGradient(&layer, this->blob_bottom_vec_,
