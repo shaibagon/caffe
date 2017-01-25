@@ -1,6 +1,8 @@
 #include <cfloat>
 #include <vector>
 
+#include "caffe/filler.hpp"
+
 #include "caffe/layers/parametric_res_layer.hpp"
 #include "caffe/util/math_functions.hpp"
 
