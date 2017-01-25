@@ -14,8 +14,21 @@ void ParametricResLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
   } else {
     this->blobs_.resize(1);
     this->blobs_[0].reset(new Blob<Dtype>(vector<int>(0)));
-    this->blobs_[0]->mutable_cpu_data()[0] = bottom[0]->cpu_data()[0]; // init to zero -- need to think how to pass parameter here...
+    // read the filler from PReLU params.
+    PReLUParameter prelu_param = this->layer_param().prelu_param();
+    shared_ptr<Filler<Dtype> > filler;
+    if (prelu_param.has_filler()) {
+      filler.reset(GetFiller<Dtype>(prelu_param.filler()));
+    } else {
+      FillerParameter filler_param;
+      filler_param.set_type("constant");
+      filler_param.set_value(1.0);
+      filler.reset(GetFiller<Dtype>(filler_param));
+    }
+    filler->Fill(this->blobs_[0].get());
   }
+  // Propagate gradients to the parameters (as directed by backward pass).
+  this->param_propagate_down_.resize(this->blobs_.size(), true);
 }
 
 template <typename Dtype>

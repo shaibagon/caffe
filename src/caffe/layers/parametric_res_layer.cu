@@ -93,7 +93,7 @@ void ParametricResLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
   caffe_gpu_sub(count, x1, x2, m);
   caffe_gpu_mul(count, m, m, m);  // m <- (x1-x2)^2
   caffe_gpu_mul(count, m, top_diff, m); // take into account the top diff
-  Dtype* theta_diff = this->blobs_[0]->mutable_gpu_diff();
+  Dtype* theta_diff = this->blobs_[0]->mutable_cpu_diff(); // not gpu_diff here, gpu_dot pushes result to host apparently
   caffe_gpu_dot(count, m, buff, theta_diff);
 }
 
