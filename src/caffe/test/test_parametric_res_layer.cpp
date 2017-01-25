@@ -66,7 +66,7 @@ TYPED_TEST(ParametricResLayerTest, TestMax) {
   FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
   filler->set_type("constant");
   // for max test, set the internal param to very high value
-  filler->set_value(100);
+  filler->set_value(1000);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -86,7 +86,7 @@ TYPED_TEST(ParametricResLayerTest, TestMin) {
   FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
   filler->set_type("constant");
   // for min test, set the internal param to very low value
-  filler->set_value(-100);
+  filler->set_value(-1000);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
