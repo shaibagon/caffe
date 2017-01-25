@@ -62,12 +62,11 @@ TYPED_TEST(ParametricResLayerTest, TestSetUp) {
 
 TYPED_TEST(ParametricResLayerTest, TestMax) {
   typedef typename TypeParam::Dtype Dtype;
-  FillerParameter filler;
-  filler.set_type("constant");
-  // for max test, set the internal param to very high value
-  filler.set_value(100);
   LayerParameter layer_param;
-  layer_param.mutable_prelu_param()->set_filler(filler);
+  FillerParameter* filler = layer_param.mutable_prelu_param()->mutable_filler();
+  filler->set_type("constant");
+  // for max test, set the internal param to very high value
+  filler->set_value(100);
   shared_ptr<ParametricResLayer<Dtype> > layer(
       new ParametricResLayer<Dtype>(layer_param));
   layer->SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
