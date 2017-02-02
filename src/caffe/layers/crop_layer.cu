@@ -8,29 +8,18 @@ namespace caffe {
 // strides in the last two dimensions.
 template <typename Dtype>
 __global__ void copy_kernel(const int n, const int height, const int width,
-    const int src_outer_stride, const int src_inner_stride,
-    const int dest_outer_stride, const int dest_inner_stride,
+    const int src_inner_stride,
+    const int dest_inner_stride,
     const Dtype* src, Dtype* dest) {
   CUDA_KERNEL_LOOP(index, n) {
-    int src_start = index / height * src_outer_stride
-                  + index % height * src_inner_stride;
-    int dest_start = index / height * dest_outer_stride
-                   + index % height * dest_inner_stride;
+    int src_start = index * src_inner_stride;
+    int dest_start = index * dest_inner_stride;
     for (int i = 0; i < width; ++i) {
       dest[dest_start + i] = src[src_start + i];
     }
   }
 }
 
-// recursive copy function, this function is similar to crop_copy but loops
-// over all but the last two dimensions. It is implemented this way to allow
-// for ND cropping while still relying on a CUDA kernel for the innermost
-// two dimensions for performance reasons.
-// An alternative way to implement ND cropping relying more on the kernel
-// would require passing offsets to the kernel, which is a bit problematic
-// because it is of variable length. Since in the standard (N,C,W,H) case
-// N,C are usually not cropped a speedup could be achieved by not looping
-// the application of the copy_kernel around these dimensions.
 template <typename Dtype>
 void CropLayer<Dtype>::crop_copy_gpu(const vector<Blob<Dtype>*>& bottom,
              const vector<Blob<Dtype>*>& top,
@@ -48,10 +37,10 @@ void CropLayer<Dtype>::crop_copy_gpu(const vector<Blob<Dtype>*>& bottom,
                 src_data, dest_data, is_forward);
     }
   } else {
-    // We are at the last two dimensions, which are stored continously in memory
-    // With (N,C,H,W)
-    //      (0,1,2,3) cur_dim   -> H
-    //                cur_dim+1 -> W
+    // We are at the last two dimensions, which are stored continuously in
+    // memory. With (N,C,H,W)
+    //              (0,1,2,3) cur_dim   -> H
+    //                        cur_dim+1 -> W
     const int lines = top[0]->shape(cur_dim);
     const int height = top[0]->shape(cur_dim);
     const int width = top[0]->shape(cur_dim+1);
@@ -62,11 +51,7 @@ void CropLayer<Dtype>::crop_copy_gpu(const vector<Blob<Dtype>*>& bottom,
     ind_off[cur_dim] = offsets[cur_dim];
     ind_off[cur_dim+1] = offsets[cur_dim+1];
     // Compute copy strides
-    const int src_outer_stride =
-        bottom[0]->shape(cur_dim)*bottom[0]->shape(cur_dim+1);
     const int src_inner_stride = bottom[0]->shape(cur_dim+1);
-    const int dest_outer_stride =
-        top[0]->shape(cur_dim)*top[0]->shape(cur_dim+1);
     const int dest_inner_stride = top[0]->shape(cur_dim+1);
 
     if (is_forward) {
@@ -77,8 +62,8 @@ void CropLayer<Dtype>::crop_copy_gpu(const vector<Blob<Dtype>*>& bottom,
       // NOLINT_NEXT_LINE(whitespace/operators)
       copy_kernel<<<CAFFE_GET_BLOCKS(lines), CAFFE_CUDA_NUM_THREADS>>>(
           lines, height, width,
-          src_outer_stride, src_inner_stride,
-          dest_outer_stride, dest_inner_stride,
+          src_inner_stride,
+          dest_inner_stride,
           bottom_data, top_data);
 
     } else {
@@ -89,8 +74,8 @@ void CropLayer<Dtype>::crop_copy_gpu(const vector<Blob<Dtype>*>& bottom,
       // NOLINT_NEXT_LINE(whitespace/operators)
       copy_kernel<<<CAFFE_GET_BLOCKS(lines), CAFFE_CUDA_NUM_THREADS>>>(
           lines, height, width,
-          dest_outer_stride, dest_inner_stride,
-          src_outer_stride, src_inner_stride,
+          dest_inner_stride,
+          src_inner_stride,
           top_diff, bottom_diff);
     }
   }
